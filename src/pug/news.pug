@@ -1,0 +1,57 @@
+extends layout/layout
+block page-content	
+	.row
+		.col
+			include layout/breadcrumbs
+				block breadcrumbContent
+					li.breadcrumb-item
+						a(href="#") Library
+					li.breadcrumb-item.active(aria-current="page") News
+		.col
+		
+			ul.nav.justify-content-end
+				li.nav-item
+					a.nav-link.active(href="#") Active
+				li.nav-item
+					a.nav-link(href="#") Link
+				li.nav-item
+					a.nav-link(href="#") Link
+				li.nav-item
+					a.nav-link.disabled(href="#") Disabled
+	.main.large.pre
+		input(
+			type='text'
+			name='textname'
+		)
+		
+		ul
+			+pet('cat')
+
+		a(href='google.com') Google
+		a(class='button' href='google.com' target='_blank') Google
+		p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maiores, dolores. Temporibus assumenda incidunt reiciendis vel voluptatum tenetur ducimus error excepturi, obcaecati accusamus! Quas iure sint quisquam vero adipisci aliquam, eos. |
+
+	+article('Hello world3')
+		| add content
+	+article('Hello world')
+	include layout/footer		
+
+		+list
+		+list
+		+list
+		+list
+	mixin link(href, name)
+		a(class!=attributes.class href=href)= name
+	+link('/foo', 'foo')
+	mixin list(id, ...items)
+		ul(id=id)
+			each item in items
+				li= item
+	+list('my-list', 1, 2, 3, 4)
+	
+		+list
+		+list
+		
+
+	
+			

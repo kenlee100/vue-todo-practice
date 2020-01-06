@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+html(lang="en")
+	include head
+		meta(charset="UTF-8")
+		title Pug
+	body
+
+		mixin list
+			ul
+				li
+				li
+		mixin pet(name)
+			li.pet= name
+		mixin article(title)
+			.article
+				.article-wrapper
+					h1 #{title}
+					if block
+						block
+					else
+						p No content provided	
+		
+		.container
+			//- include header
+			block page-content
+			include script
+			//- include footer
+			block JS_option
+		
+
+	
+			

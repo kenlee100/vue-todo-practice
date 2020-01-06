@@ -1,0 +1,355 @@
+extends layout/layout
+
+block page-content
+	.row
+		.col-md-6
+			#app
+				h1 使用v-on呼叫 / method寫function建立js事件
+				button.btn.btn-primary(@click="add('apple')") 加蘋果
+				button.btn.btn-primary(@click="add('pen')") 加鉛筆
+				button.btn.btn-primary(@click="add('pineapple')") 加鳳梨
+				br
+				h5 狀態:{{status}}
+				h5 列表共有:{{fruits.length}}項
+					br
+					|共有
+					span.mx-2 {{totals.pen}}支筆
+					span.mx-2 {{totals.apple}}顆蘋果
+					span.mx-2 {{totals.pineapple}}顆鳳梨
+				.fruit
+					.row.align-items-center.border-bottom.py-3.justify-content-between(v-for="(fruit,index) in fruits" :data-num="index")
+						.col-auto
+							img(v-if="fruit==='pen'" src="https://image.flaticon.com/icons/png/512/503/503555.png" width="50")
+							img(v-if="fruit==='apple'" src="https://image.flaticon.com/icons/png/512/415/415682.png" width="50")
+							img(v-if="fruit==='pineapple'" src="https://image.flaticon.com/icons/png/512/123/123261.png" width="50")
+						.col
+							.name {{index}}-{{fruit}}
+						.col-auto
+							button.btn.btn-danger(type="button" @click="remove(index,fruit)")
+								i.fas.fa-times
+		.col-md-6
+			#pureJS.mt-4
+				h1 純JS
+				.btn-group.mb-3
+					button.btn.btn-light(onclick="addFruit('apple')") 
+						img.mr-2(src="https://image.flaticon.com/icons/png/512/415/415682.png" width="20")
+						span.align-text-top 加蘋果
+					button.btn.btn-light(onclick="addFruit('pen')")
+						img.mr-2(src="https://image.flaticon.com/icons/png/512/503/503555.png" width="20")
+						span.align-text-top 加鉛筆
+					button.btn.btn-light(onclick="addFruit('pineapple')")
+						img.mr-2(src="https://image.flaticon.com/icons/png/512/123/123261.png" width="20")
+						span.align-text-top 加鳳梨
+				br
+				p.mb-0 狀態:
+					span#statusText
+				#fruitNum 
+					span 列表共有:
+						span.totalNum
+					br
+					|共有:
+					span.badge.badge-light.d-inline-block(data-title="pen") 0
+					span.badge.badge-light.d-inline-block(data-title="apple") 0
+					span.badge.badge-light.d-inline-block(data-title="pineapple") 0
+				.fruitGroup
+					//- .row.align-items-center.border-bottom.py-3.justify-content-between
+					//- 	.col-auto
+					//- 		img(src="https://image.flaticon.com/icons/png/512/503/503555.png" width="50")
+					//- 		//- img(src="https://image.flaticon.com/icons/png/512/415/415682.png" width="50")
+					//- 		//- img(src="https://image.flaticon.com/icons/png/512/123/123261.png" width="50")
+					//- 	.col
+					//- 		.name 
+					//- 	.col-auto
+					//- 		button.btn.btn-danger(type="button") x
+
+block JS_option
+	script.
+		var allData = [
+			"pen", "pineapple", "apple", "pen"
+		];
+		
+		var vm = new Vue({
+			el: '#app',
+			data: {
+				fruits: allData,
+				status:"",
+			},
+			methods: {
+				remove:function(index,name){
+					this.fruits.splice(index,1);
+					this.status = "第"+index+"項"+name+"已被移除";
+				},
+				add:function(data){
+					this.fruits.push(data);
+					this.status="加入"+data
+				}
+			},
+			computed: {
+				totals: function(){
+					var total = {
+						pen:0,
+						apple:0,
+						pineapple:0
+					}
+					for(var i =0; i<this.fruits.length;i++){
+						total[this.fruits[i]]+=1
+					}
+					//- console.log(total)
+					return total;
+				}
+			}
+		})
+		//- console.log(vm.totals)
+
+		var jsContainer = document.getElementById("pureJS");
+		var renderTarget = jsContainer.querySelector(".fruitGroup");
+		var imageList = [
+			"https://image.flaticon.com/icons/png/512/503/503555.png",
+			"https://image.flaticon.com/icons/png/512/415/415682.png",
+			"https://image.flaticon.com/icons/png/512/123/123261.png"
+		]
+		var imgUrl='';
+		var numIndex = 3;
+		var timestamp = new Date().getTime();
+		var newFruit = [
+			{
+				img: "https://image.flaticon.com/icons/png/512/503/503555.png",
+				id: timestamp+1,
+				name: 'pen',
+				number:1
+			},
+			{
+				img: "https://image.flaticon.com/icons/png/512/415/415682.png",
+				id: timestamp+2,
+				name: 'apple',
+				number:2
+			},
+			{
+				img: "https://image.flaticon.com/icons/png/512/123/123261.png",
+				id: timestamp+3,
+				name: 'pineapple',
+				number:3
+			},
+			//- {
+			//- 	img: "https://image.flaticon.com/icons/png/512/503/503555.png",
+			//- 	id: timestamp+4,
+			//- 	name: 'pen',
+			//- 	number:4
+			//- }
+		];
+		var datatotal;
+		var fruitNum = document.getElementById("fruitNum");
+		var statusText = document.getElementById("statusText")
+		
+
+		function imageUrl(fruit){
+			var img = fruit;
+			switch(img){
+				case 'pen':
+					imgUrl = imageList[0];
+					break;
+				case 'apple':
+					imgUrl = imageList[1];
+					break;
+				default:
+					imgUrl = imageList[2];
+			}
+			return imgUrl
+		}
+		//一次render所有內容
+		function renderTemplate(data){
+			var htmlTemplate ='';
+			for(var a=0;a<newFruit.length;a++){
+				htmlTemplate+=`
+					<div class="border-bottom px-3" data-num="${a}">
+						<div class="row align-items-center py-3 justify-content-between">
+							<div class="col-auto">
+								<img src="${data[a].img}" width="50">
+							</div>
+							<div class="col">
+								<div class="name">${a + '-'+data[a].name}</div>
+							</div>
+							<div class="col-auto">
+								<button type="button" class="btn btn-sm  btn-outline-secondary" onclick="removeFruit(${a})"><i class="fas fa-times"></i></button>
+							</div>
+						</div>
+					</div>
+				`
+			}
+			//- <div class="col">
+			//- 	<div class="name">${data[a].number + '-'+data[a].name}</div>
+			//- </div>
+			renderTarget.innerHTML=htmlTemplate;
+		}
+
+		//一次增加一個內容
+		function renderContent(data){
+			var child = document.createElement('div')
+			var htmlTemplate ='';
+			for(var a=0;a<newFruit.length;a++){
+				htmlTemplate=`
+					<div class="border-bottom px-3 animated bounceIn" data-num="${a}">
+						<div class="row align-items-center py-3 justify-content-between">
+							<div class="col-auto">
+								<img src="${data[a].img}" width="50">
+							</div>
+							<div class="col">
+								<div class="name">${a + '-'+data[a].name}</div>
+							</div>
+							<div class="col-auto">
+								<button type="button" class="btn btn-sm  btn-outline-secondary" onclick="removeFruit(${a})"><i class="fas fa-times"></i></button>
+							</div>
+						</div>
+					</div>
+				`
+			}
+			child.innerHTML = htmlTemplate
+			renderTarget.appendChild(child)
+		}
+
+		function addFruit(fruit){
+			
+			numIndex+=1;
+			timestamp = new Date().getTime();
+			newFruit.push({
+				img: imageUrl(fruit),
+				id: timestamp,
+				name: fruit,
+				number:numIndex
+			});
+
+			
+			
+			//- renderTemplate(newFruit)
+			renderContent(newFruit)
+			fruitTotals(newFruit)
+			statusText.textContent = "加入"+fruit;
+			renderNumber(datatotal)
+			console.log(newFruit)
+			
+		}
+		//- function addAnimate(){
+		//- 	var fruitList = renderTarget.querySelectorAll('[data-num]')
+		//- 	//- console.log(fruitList)
+		//- 	fruitList.forEach(function(item){
+		//- 		//- if(newFruit.id === item.id) {
+		//- 		//- }
+		//- 		item.classList.add('animated','bounceIn')
+		//- 	})
+		//- 	var timer = setTimeout(function(){
+		//- 		fruitList.forEach(function(item){
+		//- 		//- if(newFruit.id === item.id) {
+		//- 		//- }
+		//- 		item.classList.remove('animated','bounceIn')
+		//- 	})
+		//- 	},1500)
+		//- }
+		function removeFruit(index){
+			statusText.textContent = "第"+index+"項"+newFruit[index].name+"已被移除";
+			newFruit.splice(index,1);
+			renderTemplate(newFruit)
+			fruitTotals(newFruit)
+			renderNumber(datatotal)
+		}
+		function fruitTotals(data){
+			datatotal={
+				pen:0,
+				apple:0,
+				pineapple:0
+			}
+			for(var i=0;i<data.length;i++){
+				datatotal[data[i].name]+=1;
+				//- console.log(datatotal[data[i].name])
+			}
+			return datatotal;
+		}
+		var totalNum = document.querySelector(".totalNum");
+		totalNum.addEventListener('click',function(){
+			renderTemplate(newFruit)
+			fruitTotals(newFruit)
+			renderNumber(datatotal)
+		})
+		function renderNumber(data){
+			var badge = document.querySelectorAll('span.badge')
+			totalNum.textContent = newFruit.length + '項';
+			badge[0].textContent = data.pen + '支筆'
+			badge[1].textContent = data.apple + '顆蘋果'
+			badge[2].textContent = data.pineapple + '顆鳳梨'
+			//- var PenlNum = document.querySelector(".totalNum");
+			//- var str = '';
+			
+			//- str=`
+			//- 	列表共有:${newFruit.length}項
+			//- 		<br>共有:
+			//- 		<span class="badge badge-primary d-inline-block" data-title="pen">${data.pen}支筆</span>
+			//- 		<span class="badge badge-primary d-inline-block" data-title="apple">${data.apple}顆蘋果</span>
+			//- 		<span class="badge badge-primary d-inline-block" data-title="pineapple">${data.pineapple}顆鳳梨</span>
+			//- `;
+			//- //- console.log(data)
+			//- fruitNum.innerHTML = str
+		}
+		//- function add(){
+		//- 	var i=0;
+		//- 	return function(){
+		//- 		return ++i
+		//- 	}
+		//- }
+		function filterItem(e){
+			statusText.textContent = "顯示"+e.target.dataset.title;
+			fruitlen = newFruit.length;
+			var htmlTemplate ='';
+			badge.forEach(function(item){
+				item.classList.remove('badge-primary')
+			});
+			//- var fruitlist = document.querySelectorAll('div[data-num]')
+			//- console.log(fruitlist)
+			for(var a=0;a<fruitlen;a++){
+				if(e.target.dataset.title ===newFruit[a].name) {
+					e.target.classList.add('badge-primary')
+					e.target.classList.remove('badge-light')
+					
+
+					htmlTemplate+=`
+						<div class="border-bottom px-3" data-num="${a}">
+							<div class="row align-items-center py-3 justify-content-between">
+								<div class="col-auto">
+									<img src="${newFruit[a].img}" width="50">
+								</div>
+								<div class="col">
+									<div class="name">${a + '-'+newFruit[a].name}</div>
+								</div>
+								<div class="col-auto">
+									<button type="button" class="btn btn-sm  btn-outline-secondary" onclick="removeFruit(${a})"><i class="fas fa-times"></i></button>
+								</div>
+							</div>
+						</div>
+					`
+				}
+			} 
+			renderTarget.innerHTML=htmlTemplate;
+		}
+		
+		
+		function init(){
+			renderTemplate(newFruit)
+			fruitTotals(newFruit)
+			renderNumber(datatotal)
+			//- console.log(newFruit)
+		}
+		init()
+
+		var badge = document.querySelectorAll('span.badge')
+		console.log(badge)
+		badge.forEach(function(item,index){
+			
+			item.addEventListener('click',filterItem)
+		});
+		//- for(var bb = 0; bb<badge.length;bb++){
+		//- 	badge[bb].addEventListener('click',filterItem)
+		//- }
+		//- var addfn = add();
+		//- console.log(addfn())
+		//- console.log(addfn())
+		//- console.log(addfn())
+		//- console.log(addfn())
+		//- console.log(addfn())

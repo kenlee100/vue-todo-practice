@@ -1,0 +1,90 @@
+@import "font-awesome5/_fontawesome";
+@import "font-awesome5/_solid";
+@import "font-awesome5/_brands";
+
+$brand-color: #a4b6cf;
+*{
+	font-family: arial,"微軟正黑體";
+}
+a {
+	color: #555;
+}
+.header {
+	background-color: $brand-color;
+	
+	display: block;
+	h1 {
+		font-size: 15px;
+	}
+
+}
+.main {
+	background-color: #ddd;
+}
+.bkl_icon {
+	width: 150px;
+}
+
+.book {	
+	.name {
+		font-size: 1rem;
+		line-height: 1.5;
+	}
+	// img {
+	// 	max-width: 200px;
+	// }
+	.author, .price, .publish, .date {
+		font-weight: normal;
+		margin-bottom: 5px;
+		font-size: 14px;
+		color: #555;
+	}
+	text-align: center;
+	&.detail {
+		// width: 80%;
+		text-align: left;
+		// display: flex;
+		// align-items: center;
+		// &:after {
+		// 	content: "";
+		// 	clear: both;
+		// 	display: block;
+		// }
+		// img {
+		// 	// max-width: 150px;
+		// 	// float: left;
+		// 	display: inline-block;
+		// 	vertical-align: middle;
+		// }
+		// .infos {
+		// 	display: inline-block;
+		// 	vertical-align: middle;
+		// 	width: calc(100% - 150px -20px);
+		// 	// flex-grow: 1;
+		// 	// flex-shrink: 1;
+		// }
+		
+	
+	}
+	&.lg {
+		img {
+			width: 250px;
+		}
+	}
+	&.sm {
+		img {
+			width: 150px;
+		}
+	}
+}
+
+[data-title]{
+	cursor: pointer;
+}
+.fruit {
+	[data-num] {
+		&:hover {
+			background-color: #f3f3f3;
+		}
+	}
+}
