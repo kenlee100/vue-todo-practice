@@ -19,8 +19,23 @@
             <button class="btn btn-primary" @click="add('pineapple')">加鳳梨</button><br/>
             <h5>狀態:{{status}}</h5>
             <h5>列表共有:{{fruits.length}}項<br/>共有<span class="mx-2">{{totals.pen}}支筆</span><span class="mx-2">{{totals.apple}}顆蘋果</span><span class="mx-2">{{totals.pineapple}}顆鳳梨</span></h5>
+            <ul class="nav nav-tabs">
+              <li class="nav-item"><a class="nav-link" href="#" @click="tabView='all'" :class="{'active':tabView==='all'}">全部</a></li>
+              <li class="nav-item"><a class="nav-link" href="#" @click="tabView='pen'" :class="{'active':tabView==='pen'}">筆</a></li>
+              <li class="nav-item"><a class="nav-link" href="#" @click="tabView='apple'" :class="{'active':tabView==='apple'}">蘋果</a></li>
+              <li class="nav-item"><a class="nav-link" href="#" @click="tabView='pineapple'" :class="{'active':tabView==='pineapple'}">鳳梨</a></li>
+            </ul>
             <div class="fruit">
-              <div class="row align-items-center border-bottom py-3 justify-content-between" v-for="(fruit,index) in fruits" :data-num="index">
+              <div class="row align-items-center border-bottom py-3 justify-content-between" v-for="(fruit,index) in fruits" :data-num="index" v-if="tabView===fruit">
+                <div class="col-auto"><img v-if="fruit==='pen'" src="https://image.flaticon.com/icons/png/512/503/503555.png" width="50"/><img v-if="fruit==='apple'" src="https://image.flaticon.com/icons/png/512/415/415682.png" width="50"/><img v-if="fruit==='pineapple'" src="https://image.flaticon.com/icons/png/512/123/123261.png" width="50"/></div>
+                <div class="col">
+                  <div class="name">{{index}}-{{fruit}}</div>
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn-danger" type="button" @click="remove(index,fruit)"><i class="fas fa-times"></i></button>
+                </div>
+              </div>
+              <div class="row align-items-center border-bottom py-3 justify-content-between" v-for="(fruit,index) in fruits" :data-num="index" v-if="tabView==='all'">
                 <div class="col-auto"><img v-if="fruit==='pen'" src="https://image.flaticon.com/icons/png/512/503/503555.png" width="50"/><img v-if="fruit==='apple'" src="https://image.flaticon.com/icons/png/512/415/415682.png" width="50"/><img v-if="fruit==='pineapple'" src="https://image.flaticon.com/icons/png/512/123/123261.png" width="50"/></div>
                 <div class="col">
                   <div class="name">{{index}}-{{fruit}}</div>
@@ -60,6 +75,8 @@
         	data: {
         		fruits: allData,
         		status:"",
+        		tabView: 'all',
+        		isTabActive: false,
         	},
         	methods: {
         		remove:function(index,name){

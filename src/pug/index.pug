@@ -16,8 +16,27 @@ block page-content
 					span.mx-2 {{totals.pen}}支筆
 					span.mx-2 {{totals.apple}}顆蘋果
 					span.mx-2 {{totals.pineapple}}顆鳳梨
+				ul.nav.nav-tabs
+					li.nav-item
+						a.nav-link(href="#" @click="tabView='all'" :class="{'active':tabView==='all'}") 全部
+					li.nav-item
+						a.nav-link(href="#" @click="tabView='pen'" :class="{'active':tabView==='pen'}") 筆
+					li.nav-item
+						a.nav-link(href="#" @click="tabView='apple'" :class="{'active':tabView==='apple'}") 蘋果
+					li.nav-item
+						a.nav-link(href="#" @click="tabView='pineapple'" :class="{'active':tabView==='pineapple'}") 鳳梨
 				.fruit
-					.row.align-items-center.border-bottom.py-3.justify-content-between(v-for="(fruit,index) in fruits" :data-num="index")
+					.row.align-items-center.border-bottom.py-3.justify-content-between(v-for="(fruit,index) in fruits" :data-num="index" v-if="tabView===fruit")
+						.col-auto
+							img(v-if="fruit==='pen'" src="https://image.flaticon.com/icons/png/512/503/503555.png" width="50")
+							img(v-if="fruit==='apple'" src="https://image.flaticon.com/icons/png/512/415/415682.png" width="50")
+							img(v-if="fruit==='pineapple'" src="https://image.flaticon.com/icons/png/512/123/123261.png" width="50")
+						.col
+							.name {{index}}-{{fruit}}
+						.col-auto
+							button.btn.btn-danger(type="button" @click="remove(index,fruit)")
+								i.fas.fa-times
+					.row.align-items-center.border-bottom.py-3.justify-content-between(v-for="(fruit,index) in fruits" :data-num="index" v-if="tabView==='all'")
 						.col-auto
 							img(v-if="fruit==='pen'" src="https://image.flaticon.com/icons/png/512/503/503555.png" width="50")
 							img(v-if="fruit==='apple'" src="https://image.flaticon.com/icons/png/512/415/415682.png" width="50")
@@ -73,6 +92,8 @@ block JS_option
 			data: {
 				fruits: allData,
 				status:"",
+				tabView: 'all',
+				isTabActive: false,
 			},
 			methods: {
 				remove:function(index,name){
